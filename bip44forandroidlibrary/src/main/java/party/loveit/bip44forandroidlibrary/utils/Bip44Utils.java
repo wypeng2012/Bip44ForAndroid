@@ -20,6 +20,7 @@ public final class Bip44Utils {
 
     /**
      * generateMnemonic 12 Words
+     *
      * @param context
      * @return
      * @throws Exception
@@ -39,60 +40,102 @@ public final class Bip44Utils {
     }
 
     /**
-     *
      * @param words
      * @return
      */
-    public static byte[] getSeed(List<String> words){
+    public static byte[] getSeed(List<String> words) {
         return MnemonicCode.toSeed(words, "");
     }
 
     /**
-     *
      * @param words
-     * @param path
+     * @param path  m / purpose' / coin_type' / account' / change / address_index
      * @return
      */
-    public static BigInteger getPathPrivateKey(List<String> words, String path){
-         return getDeterministicKey(words,null,path).getPrivKey();
+    public static BigInteger getPathPrivateKey(List<String> words, String path) {
+        return getDeterministicKey(words, null, path).getPrivKey();
     }
 
     /**
-     *
      * @param words
      * @param seed
-     * @param path
+     * @param path  m / purpose' / coin_type' / account' / change / address_index
      * @return
      */
-    public static BigInteger getPathPrivateKey(List<String> words, byte[] seed, String path){
-        return getDeterministicKey(words,seed,path).getPrivKey();
+    public static BigInteger getPathPrivateKey(List<String> words, byte[] seed, String path) {
+        return getDeterministicKey(words, seed, path).getPrivKey();
     }
 
     /**
-     *
      * @param words
-     * @param path
+     * @param path  m / purpose' / coin_type' / account' / change / address_index
      * @return
      */
-    public static byte[] getPathPrivateKeyBytes(List<String> words, String path){
-        return getDeterministicKey(words,null,path).getPrivKeyBytes();
+    public static byte[] getPathPrivateKeyBytes(List<String> words, String path) {
+        return getDeterministicKey(words, null, path).getPrivKeyBytes();
     }
 
     /**
-     *
      * @param words
      * @param seed
-     * @param path
+     * @param path  m / purpose' / coin_type' / account' / change / address_index
      * @return
      */
-    public static byte[] getPathPrivateKeyBytes(List<String> words, byte[] seed, String path){
-        return getDeterministicKey(words,seed,path).getPrivKeyBytes();
+    public static byte[] getPathPrivateKeyBytes(List<String> words, byte[] seed, String path) {
+        return getDeterministicKey(words, seed, path).getPrivKeyBytes();
     }
 
+    /**
+     * @param words
+     * @param coinType see https://github.com/satoshilabs/slips/blob/master/slip-0044.md
+     * @return
+     */
+    public static BigInteger getDefaultPathPrivateKey(List<String> words, int coinType) {
+        String path = "m/44'/" +
+                coinType +
+                "'/0'/0/0";
+        return getDeterministicKey(words, null, path).getPrivKey();
+    }
 
+    /**
+     * @param words
+     * @param seed
+     * @param coinType see https://github.com/satoshilabs/slips/blob/master/slip-0044.md
+     * @return
+     */
+    public static BigInteger getDefaultPathPrivateKey(List<String> words, byte[] seed, int coinType) {
+        String path = "m/44'/" +
+                coinType +
+                "'/0'/0/0";
+        return getDeterministicKey(words, seed, path).getPrivKey();
+    }
 
+    /**
+     * @param words
+     * @param coinType see https://github.com/satoshilabs/slips/blob/master/slip-0044.md
+     * @return
+     */
+    public static byte[] getDefaultPathPrivateKeyBytes(List<String> words, int coinType) {
+        String path = "m/44'/" +
+                coinType +
+                "'/0'/0/0";
+        return getDeterministicKey(words, null, path).getPrivKeyBytes();
+    }
 
-    private static DeterministicKey getDeterministicKey(List<String> words,byte[] seed, String path){
+    /**
+     * @param words
+     * @param seed
+     * @param coinType see https://github.com/satoshilabs/slips/blob/master/slip-0044.md
+     * @return
+     */
+    public static byte[] getDefaultPathPrivateKeyBytes(List<String> words, byte[] seed, int coinType) {
+        String path = "m/44'/" +
+                coinType +
+                "'/0'/0/0";
+        return getDeterministicKey(words, seed, path).getPrivKeyBytes();
+    }
+
+    private static DeterministicKey getDeterministicKey(List<String> words, byte[] seed, String path) {
         DeterministicSeed deterministicSeed = new DeterministicSeed(words, seed, "", 0);
         DeterministicKeyChain deterministicKeyChain = DeterministicKeyChain.builder().seed(deterministicSeed).build();
         return deterministicKeyChain.getKeyByPath(parsePath(path), true);

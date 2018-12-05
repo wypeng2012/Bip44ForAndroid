@@ -41,6 +41,9 @@ public class MainActivity extends AppCompatActivity {
                     byte[] pri4 = Bip44Utils.getPathPrivateKeyBytes(words, seed,"m/44'/194'/0'/0/0");
                     Log.e("TAG", "pri4: " + new BigInteger(1,pri4).toString(16));
 
+                    byte[] pri5 = Bip44Utils.getDefaultPathPrivateKeyBytes(words, 194);
+                    Log.e("TAG", "pri5: " + new BigInteger(1,pri5).toString(16));
+
 
 
                 } catch (Exception e) {
