@@ -1,0 +1,1 @@
+include ':app', ':bip44forandroidlibrary'

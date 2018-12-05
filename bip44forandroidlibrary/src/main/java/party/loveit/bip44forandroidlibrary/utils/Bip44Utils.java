@@ -1,0 +1,116 @@
+package party.loveit.bip44forandroidlibrary.utils;
+
+import android.content.Context;
+
+import java.math.BigInteger;
+import java.security.SecureRandom;
+import java.util.ArrayList;
+import java.util.List;
+
+import javax.annotation.Nonnull;
+
+import party.loveit.bip44forandroidlibrary.core.ChildNumber;
+import party.loveit.bip44forandroidlibrary.core.DeterministicKeyChain;
+import party.loveit.bip44forandroidlibrary.core.DeterministicSeed;
+import party.loveit.bip44forandroidlibrary.crypto.DeterministicKey;
+
+public final class Bip44Utils {
+    private Bip44Utils() {
+    }
+
+    /**
+     * generateMnemonic 12 Words
+     * @param context
+     * @return
+     * @throws Exception
+     */
+    public static List<String> generateMnemonicWords(Context context) throws Exception {
+        MnemonicCode mnemonicCode = new MnemonicCode(context.getAssets().open("english_words.txt"), null);
+
+        SecureRandom secureRandom = SecureRandomUtils.secureRandom();
+        byte[] initialEntropy = new byte[16];
+        secureRandom.nextBytes(initialEntropy);
+        List<String> wd = mnemonicCode.toMnemonic(initialEntropy);
+        if (wd == null || wd.size() != 12)
+            throw new RuntimeException("generate word error");
+        else {
+            return wd;
+        }
+    }
+
+    /**
+     *
+     * @param words
+     * @return
+     */
+    public static byte[] getSeed(List<String> words){
+        return MnemonicCode.toSeed(words, "");
+    }
+
+    /**
+     *
+     * @param words
+     * @param path
+     * @return
+     */
+    public static BigInteger getPathPrivateKey(List<String> words, String path){
+         return getDeterministicKey(words,null,path).getPrivKey();
+    }
+
+    /**
+     *
+     * @param words
+     * @param seed
+     * @param path
+     * @return
+     */
+    public static BigInteger getPathPrivateKey(List<String> words, byte[] seed, String path){
+        return getDeterministicKey(words,seed,path).getPrivKey();
+    }
+
+    /**
+     *
+     * @param words
+     * @param path
+     * @return
+     */
+    public static byte[] getPathPrivateKeyBytes(List<String> words, String path){
+        return getDeterministicKey(words,null,path).getPrivKeyBytes();
+    }
+
+    /**
+     *
+     * @param words
+     * @param seed
+     * @param path
+     * @return
+     */
+    public static byte[] getPathPrivateKeyBytes(List<String> words, byte[] seed, String path){
+        return getDeterministicKey(words,seed,path).getPrivKeyBytes();
+    }
+
+
+
+
+    private static DeterministicKey getDeterministicKey(List<String> words,byte[] seed, String path){
+        DeterministicSeed deterministicSeed = new DeterministicSeed(words, seed, "", 0);
+        DeterministicKeyChain deterministicKeyChain = DeterministicKeyChain.builder().seed(deterministicSeed).build();
+        return deterministicKeyChain.getKeyByPath(parsePath(path), true);
+    }
+
+    private static List<ChildNumber> parsePath(@Nonnull String path) {
+        String[] parsedNodes = path.replace("m", "").split("/");
+        List<ChildNumber> nodes = new ArrayList<>();
+
+        for (String n : parsedNodes) {
+            n = n.replaceAll(" ", "");
+            if (n.length() == 0) continue;
+            boolean isHard = n.endsWith("'");
+            if (isHard) n = n.substring(0, n.length() - 1);
+            int nodeNumber = Integer.parseInt(n);
+            nodes.add(new ChildNumber(nodeNumber, isHard));
+        }
+
+        return nodes;
+    }
+}
