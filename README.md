@@ -8,6 +8,9 @@ Bip44 implementions for android.
 
 > # support Android sdk >= 14 #
 
+
+中文版文档：[https://blog.csdn.net/wypeng2010/article/details/84850521](https://blog.csdn.net/wypeng2010/article/details/84850521)
+
 **- Use it**
 
 
