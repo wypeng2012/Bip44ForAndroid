@@ -38,6 +38,30 @@ Bip44 implementions for android.
 
                     byte[] pri5 = Bip44Utils.getDefaultPathPrivateKeyBytes(words, 194);
                     Log.e("TAG", "pri5: " + new BigInteger(1,pri5).toString(16));
+
+                    //if you use bitcoinj library,you can generate bitcoin privatekey and public key and address like this:
+
+                    BigInteger pribtc = Bip44Utils.getPathPrivateKey(words,"m/44'/0'/0'/0/0");
+
+                    ECKey ecKey = ECKey.fromPrivate(pribtc);
+
+	                String publicKey = ecKey.getPublicKeyAsHex();
+	                String privateKey = ecKey.getPrivateKeyEncoded(networkParameters).toString();
+	                String address = ecKey.toAddress(networkParameters).toString();
+
+
+                    //if you use web3j library,you can generate bitcoin privatekey and public key and address like this:
+
+					BigInteger prieth = Bip44Utils.getPathPrivateKey(words,"m/44'/60'/0'/0/0");
+
+                    ECKeyPair ecKeyPair = ECKeyPair.create(prieth);
+
+	                String publicKey = Numeric.toHexStringWithPrefix(ecKeyPair.getPublicKey());
+	                String privateKey = Numeric.toHexStringWithPrefix(ecKeyPair.getPrivateKey());
+	                String address = "0x" + Keys.getAddress(ecKeyPair);
+                    
+
+
 ```
 
 
@@ -95,10 +119,10 @@ implementation 'party.loveit:bip44forandroidlibrary:1.0.7'
 ```
 
 
+ **- coin_type link**
 
 
-
-
+[https://github.com/satoshilabs/slips/blob/master/slip-0044.md](https://github.com/satoshilabs/slips/blob/master/slip-0044.md)
 
 
 
