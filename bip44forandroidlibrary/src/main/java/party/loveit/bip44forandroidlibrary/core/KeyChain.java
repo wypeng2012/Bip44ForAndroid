@@ -17,9 +17,6 @@
 package party.loveit.bip44forandroidlibrary.core;
 
 
-
-import com.google.common.hash.BloomFilter;
-
 import java.util.List;
 import java.util.concurrent.Executor;
 import party.loveit.bip44forandroidlibrary.listener.KeyChainEventListener;
@@ -36,8 +33,7 @@ import party.loveit.bip44forandroidlibrary.listener.KeyChainEventListener;
  * deterministically from a seed (and thus the notion of importing a key is meaningless).</p>
  */
 public interface KeyChain {
-    /** Returns true if the given key is in the chain. */
-   // boolean hasKey(ECKey key);
+
 
     enum KeyPurpose {
         RECEIVE_FUNDS,
@@ -52,8 +48,6 @@ public interface KeyChain {
     /** Obtains a key intended for the given purpose. The chain may create a new key, derive one, or re-use an old one. */
     ECKey getKey(KeyPurpose purpose);
 
-    /** Returns a list of keys serialized to the bitcoinj protobuf format. */
-   // List<Protos.Key> serializeToProtobuf();
 
     /** Adds a listener for events that are run when keys are added, on the user thread. */
     void addEventListener(KeyChainEventListener listener);
@@ -67,11 +61,6 @@ public interface KeyChain {
     /** Returns the number of keys this key chain manages. */
     int numKeys();
 
-    /**
-     * Returns the number of elements this chain wishes to insert into the Bloom filter. The size passed to
-     * {@link #getFilter(int, double, long)} should be at least this large.
-     */
-   // int numBloomFilterEntries();
 
     /**
      * <p>Returns the earliest creation time of keys in this chain, in seconds since the epoch. This can return zero
@@ -80,17 +69,4 @@ public interface KeyChain {
      */
     long getEarliestKeyCreationTime();
 
-    /**
-     * <p>Gets a bloom filter that contains all of the public keys from this chain, and which will provide the given
-     * false-positive rate if it has size elements. Keep in mind that you will get 2 elements in the bloom filter for
-     * each key in the key chain, for the public key and the hash of the public key (address form). For this reason
-     * size should be <i>at least</i> 2x the result of {@link #numKeys()}.</p>
-     *
-     * <p>This is used to generate a {@link BloomFilter} which can be {@link BloomFilter#merge(BloomFilter)}d with
-     * another. It could also be used if you have a specific target for the filter's size.</p>
-     *
-     * <p>See the docs for {@link BloomFilter#BloomFilter(int, double, long)} for a brief
-     * explanation of anonymity when using bloom filters, and for the meaning of these parameters.</p>
-     */
-   // BloomFilter getFilter(int size, double falsePositiveRate, long tweak);
 }

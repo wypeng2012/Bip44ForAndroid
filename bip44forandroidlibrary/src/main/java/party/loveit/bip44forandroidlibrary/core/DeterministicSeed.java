@@ -20,16 +20,11 @@ package party.loveit.bip44forandroidlibrary.core;
 
 import com.google.common.base.Objects;
 import com.google.common.base.Splitter;
-
 import org.bouncycastle.crypto.params.KeyParameter;
-
 import javax.annotation.Nullable;
-
 import java.nio.charset.Charset;
-import java.nio.charset.StandardCharsets;
 import java.security.SecureRandom;
 import java.util.List;
-
 import party.loveit.bip44forandroidlibrary.crypto.EncryptableItem;
 import party.loveit.bip44forandroidlibrary.crypto.EncryptedData;
 import party.loveit.bip44forandroidlibrary.crypto.KeyCrypter;
@@ -178,10 +173,6 @@ public class DeterministicSeed implements EncryptableItem {
         return encryptedMnemonicCode;
     }
 
-    /*@Override
-    public Protos.Wallet.EncryptionType getEncryptionType() {
-        return Protos.Wallet.EncryptionType.ENCRYPTED_SCRYPT_AES;
-    }*/
 
     @Nullable
     public EncryptedData getEncryptedSeedData() {
