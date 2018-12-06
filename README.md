@@ -6,7 +6,7 @@ Bip44 implementions for android.
 
 
 
-> # suppor Android sdk >= 14 #
+> # support Android sdk >= 14 #
 
 **- Use it**
 
